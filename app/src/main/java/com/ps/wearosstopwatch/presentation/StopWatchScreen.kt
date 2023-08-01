@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,8 +24,11 @@ import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonColors
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.CompactButton
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.OutlinedButton
+import androidx.wear.compose.material.Switch
 import androidx.wear.compose.material.Text
 
 @Composable
@@ -33,6 +37,7 @@ fun StopWatchScreen(
     text: String,
     onToggleRunning: () -> Unit,
     onReset: () -> Unit,
+    onNavigateToTimer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -40,6 +45,14 @@ fun StopWatchScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        NavigationButton(
+            icon = Icons.Default.Timer, destination = "Timer", onClick = onNavigateToTimer,
+            modifier = Modifier.fillMaxWidth(0.4f)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = text,
             fontSize = 20.sp,
@@ -59,7 +72,7 @@ fun StopWatchScreen(
                     }, contentDescription = null
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(16.dp))
 
             Button(
