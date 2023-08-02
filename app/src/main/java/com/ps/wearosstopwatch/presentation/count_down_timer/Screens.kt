@@ -1,4 +1,4 @@
-package com.ps.wearosstopwatch.presentation
+package com.ps.wearosstopwatch.presentation.count_down_timer
 
 
 sealed class Screens(val route: String){

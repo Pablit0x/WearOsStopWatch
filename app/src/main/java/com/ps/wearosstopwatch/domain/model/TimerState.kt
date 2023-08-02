@@ -1,4 +1,4 @@
-package com.ps.wearosstopwatch.presentation
+package com.ps.wearosstopwatch.domain.model
 
 enum class TimerState {
     RUNNING, PAUSED, RESET

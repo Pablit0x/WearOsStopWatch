@@ -1,20 +1,13 @@
-package com.ps.wearosstopwatch.presentation
+package com.ps.wearosstopwatch.presentation.stop_watch
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
@@ -23,83 +16,45 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import com.ps.wearosstopwatch.presentation.components.NavigationButton
+import com.ps.wearosstopwatch.domain.model.TimerState
 
 @Composable
-fun TimerScreen(
+fun StopWatchScreen(
     state: TimerState,
-    countdownText: String,
-    onNavigateToStopWatch: () -> Unit,
+    text: String,
     onToggleRunning: () -> Unit,
-    onIncreaseTime: () -> Unit,
-    onDecreaseTime: () -> Unit,
-    onReset: () -> Unit
+    onReset: () -> Unit,
+    onNavigateToTimer: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         NavigationButton(
-            icon = Icons.Default.Timer,
-            destination = "Stop Watch",
-            onClick = onNavigateToStopWatch,
-            modifier = Modifier.fillMaxWidth(0.7f)
+            icon = Icons.Default.Timer, destination = "Timer", onClick = onNavigateToTimer,
+            modifier = Modifier.fillMaxWidth(0.4f)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-
-
-            Button(
-                onClick = onIncreaseTime, colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.background
-                ),
-                enabled = state != TimerState.RUNNING
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null
-                )
-            }
-
-            Text(
-                text = countdownText,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center
-            )
-
-            Button(
-                onClick = onDecreaseTime, colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.background
-                ),
-                enabled = state != TimerState.RUNNING
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null
-                )
-            }
-        }
-
-
+        Text(
+            text = text,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
@@ -129,6 +84,5 @@ fun TimerScreen(
             }
         }
     }
-
 
 }

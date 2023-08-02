@@ -1,4 +1,4 @@
-package com.ps.wearosstopwatch.presentation
+package com.ps.wearosstopwatch.presentation.count_down_timer
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -9,6 +9,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
+import com.ps.wearosstopwatch.presentation.stop_watch.StopWatchScreen
+import com.ps.wearosstopwatch.presentation.stop_watch.StopWatchViewModel
 
 @Composable
 fun NavGraph() {

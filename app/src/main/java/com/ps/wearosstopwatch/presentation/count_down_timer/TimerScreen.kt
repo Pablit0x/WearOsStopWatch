@@ -1,4 +1,4 @@
-package com.ps.wearosstopwatch.presentation
+package com.ps.wearosstopwatch.presentation.count_down_timer
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,8 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Timer
@@ -22,43 +23,78 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.ButtonColors
 import androidx.wear.compose.material.ButtonDefaults
-import androidx.wear.compose.material.CompactButton
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.OutlinedButton
-import androidx.wear.compose.material.Switch
 import androidx.wear.compose.material.Text
+import com.ps.wearosstopwatch.presentation.components.NavigationButton
+import com.ps.wearosstopwatch.domain.model.TimerState
 
 @Composable
-fun StopWatchScreen(
+fun TimerScreen(
     state: TimerState,
-    text: String,
+    countdownText: String,
+    onNavigateToStopWatch: () -> Unit,
     onToggleRunning: () -> Unit,
-    onReset: () -> Unit,
-    onNavigateToTimer: () -> Unit,
-    modifier: Modifier = Modifier
+    onIncreaseTime: () -> Unit,
+    onDecreaseTime: () -> Unit,
+    onReset: () -> Unit
 ) {
+
     Column(
-        modifier = modifier,
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         NavigationButton(
-            icon = Icons.Default.Timer, destination = "Timer", onClick = onNavigateToTimer,
-            modifier = Modifier.fillMaxWidth(0.4f)
+            icon = Icons.Default.Timer,
+            destination = "Stop Watch",
+            onClick = onNavigateToStopWatch,
+            modifier = Modifier.fillMaxWidth(0.7f)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = text,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center
-        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+
+
+            Button(
+                onClick = onIncreaseTime, colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.background
+                ),
+                enabled = state != TimerState.RUNNING
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null
+                )
+            }
+
+            Text(
+                text = countdownText,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center
+            )
+
+            Button(
+                onClick = onDecreaseTime, colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.background
+                ),
+                enabled = state != TimerState.RUNNING
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null
+                )
+            }
+        }
+
+
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
@@ -88,5 +124,6 @@ fun StopWatchScreen(
             }
         }
     }
+
 
 }
