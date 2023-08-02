@@ -32,9 +32,7 @@ fun NavigationButton(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = icon, contentDescription = "")
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(text = destination, fontSize = 12.sp)
+            Text(text = destination, fontSize = 8.sp)
         }
     }
 }
