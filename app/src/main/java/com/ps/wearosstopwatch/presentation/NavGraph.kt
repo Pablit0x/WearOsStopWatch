@@ -42,7 +42,9 @@ fun NavGraph() {
                 onToggleRunning = viewModel::toggleRunning,
                 onNavigateToStopWatch = {
                     navController.navigate(Screens.STOP_WATCH_SCREEN)
-                })
+                },
+                onIncreaseTime = viewModel::increaseTimer,
+                onDecreaseTime = viewModel::decreaseTimer)
         }
     }
 }

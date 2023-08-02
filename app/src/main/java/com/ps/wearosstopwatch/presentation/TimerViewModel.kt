@@ -31,13 +31,12 @@ class TimerViewModel : ViewModel() {
     private val _timerState = MutableStateFlow(TimerState.RESET)
     val timerState = _timerState.asStateFlow()
 
-    private val formatter = DateTimeFormatter.ofPattern("HH:mm:ss:SSS")
-
     val countdownText = _remainingTime.map { millis ->
-        LocalTime.ofNanoOfDay(millis * 1_000_000).format(formatter)
+        (millis / 1000).toString()
     }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), "00:60:00:000"
+        viewModelScope, SharingStarted.WhileSubscribed(5000), "60"
     )
+
 
     init {
         _timerState.flatMapLatest { timerState ->
@@ -57,19 +56,26 @@ class TimerViewModel : ViewModel() {
 
     fun resetTimer() {
         _timerState.update { TimerState.RESET }
-        _remainingTime.update { 60L }
+        _remainingTime.update { 60L * 1000 }
     }
 
-    fun setTimer(durationInMillis: Long) {
-        _remainingTime.value = durationInMillis
+    fun increaseTimer() {
+        _remainingTime.update { it + (10L * 100) }
+    }
+
+    fun decreaseTimer() {
+        _remainingTime.update { it - (10L * 100) }
     }
 
     private fun getTimerFlow(isRunning: Boolean): Flow<Long> {
         return flow {
+            var startTime = System.currentTimeMillis()
             while (isRunning && _remainingTime.value > 0) {
-                val timeDiff = 10L
+                val currentTime = System.currentTimeMillis()
+                val timeDiff = currentTime - startTime
                 emit(timeDiff)
-                delay(timeDiff)
+                startTime = currentTime
+                delay(10L)
             }
         }
     }
