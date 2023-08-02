@@ -1,5 +1,10 @@
 package com.ps.wearosstopwatch.presentation
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,28 +24,27 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class StopWatchViewModel : ViewModel() {
+class TimerViewModel : ViewModel() {
 
-    private val _elapsedTime = MutableStateFlow(0L)
-    val elapsedTime = _elapsedTime.asStateFlow()
+    private val _remainingTime = MutableStateFlow(60L * 1000)
 
     private val _timerState = MutableStateFlow(TimerState.RESET)
     val timerState = _timerState.asStateFlow()
 
     private val formatter = DateTimeFormatter.ofPattern("HH:mm:ss:SSS")
 
-    val stopWatchText = _elapsedTime.map { millis ->
+    val countdownText = _remainingTime.map { millis ->
         LocalTime.ofNanoOfDay(millis * 1_000_000).format(formatter)
     }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), "00:00:00:000"
+        viewModelScope, SharingStarted.WhileSubscribed(5000), "00:60:00:000"
     )
 
     init {
         _timerState.flatMapLatest { timerState ->
-            getStopWatchFlow(isRunning = timerState == TimerState.RUNNING)
+            getTimerFlow(isRunning = timerState == TimerState.RUNNING)
         }.onEach { timeDiff ->
-            _elapsedTime.update { it + timeDiff }
-        }.launchIn(viewModelScope)
+            _remainingTime.update { it - timeDiff }
+        }.launchIn(viewModelScope) // Add this line to start collecting data from the flow.
     }
 
     fun toggleRunning() {
@@ -51,26 +55,22 @@ class StopWatchViewModel : ViewModel() {
         }
     }
 
-    fun resetStopWatch() {
+    fun resetTimer() {
         _timerState.update { TimerState.RESET }
-        _elapsedTime.update { 0L }
+        _remainingTime.update { 60L }
     }
 
-    private fun getStopWatchFlow(isRunning: Boolean): Flow<Long> {
-        return flow {
-            var startMillis = System.currentTimeMillis()
-            while (isRunning) {
-                val currentMillis = System.currentTimeMillis()
-                val timeDiff = if (currentMillis > startMillis) {
-                    currentMillis - startMillis
-                } else 0L
+    fun setTimer(durationInMillis: Long) {
+        _remainingTime.value = durationInMillis
+    }
 
+    private fun getTimerFlow(isRunning: Boolean): Flow<Long> {
+        return flow {
+            while (isRunning && _remainingTime.value > 0) {
+                val timeDiff = 10L
                 emit(timeDiff)
-                startMillis = System.currentTimeMillis()
-                delay(10L)
+                delay(timeDiff)
             }
         }
     }
-
-
 }
